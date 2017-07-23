@@ -6,10 +6,10 @@ contract('SimpleBank', function(accounts) {
   const alice = accounts[1];
   const bob = accounts[2];
 
-  it("should put 1000 MetaCoin in the first account", function() {
+  it("should put 1000 tokens in the first and second account", function() {
     let bank = undefined;
     return SimpleBank
-    .deployed()
+    .new()
     .then(function(instance) {
       bank = instance;
       return instance.enroll(alice);
@@ -33,13 +33,16 @@ contract('SimpleBank', function(accounts) {
 
   it("should deposit correct amount", function() {
     let bank = undefined;
-    const deposit = web3.toBigNumber(2000);
+    const deposit = web3.toBigNumber(2);
     const expectedEventResult = {accountAddress: alice.address, amount: deposit};
-    const expectedBalance = web3.toBigNumber(deposit).plus(web3.toBigNumber(1000)).toString();
+    const expectedBalance = web3.toBigNumber(deposit).plus(web3.toBigNumber(1)).toString();
     return SimpleBank
-    .deployed()
+    .new()
     .then(function(instance) {
       bank = instance;
+      return bank.enroll(alice);
+    })
+    .then(function() {
       return bank.deposit(alice, deposit);
     })
     .then(function(txReceipt) {
