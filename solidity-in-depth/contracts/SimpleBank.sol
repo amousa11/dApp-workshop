@@ -1,4 +1,4 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.13;
 contract SimpleBank {
 
     mapping (address => uint) private balances;
@@ -61,6 +61,6 @@ contract SimpleBank {
     // Added so ether sent to this contract is reverted if the contract fails
     // otherwise, the sender's money is transferred to contract
     function () {
-        throw;
+        revert();
     }
 }

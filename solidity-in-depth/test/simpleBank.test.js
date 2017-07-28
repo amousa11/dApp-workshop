@@ -6,63 +6,63 @@ contract('SimpleBank', function(accounts) {
   const alice = accounts[1];
   const bob = accounts[2];
 
-  it("should put 1000 tokens in the first and second account", function() {
-    let bank = undefined;
-    return SimpleBank
-    .new()
-    .then(function(instance) {
-      bank = instance;
-      return instance.enroll(alice);
-    })
-    .then(function(enrollBalance) {
-      return bank.balance(alice)
-    })
-    .then(function(balance) {
-      assert.equal(balance.toString(), web3.toBigNumber(1000).toString(), "1000 wasn't in the first account, check balance method or constructor");
-    })
-    .then(function(instance) {
-      return bank.enroll(bob);
-    })
-    .then(function(enrollBalance) {
-      return bank.balance(bob)
-    })
-    .then(function(balance) {
-      assert.equal(balance.toString(), web3.toBigNumber(1000).toString(), "1000 wasn't in the second account, check balance method or constructor");
-    });
+  it("should put 1000 tokens in the first and second account", async () => {
+    const bank = await SimpleBank.deployed();
+
+    await bank.enroll({from: alice});
+    await bank.enroll({from: bob});
+
+    const aliceBalance = await bank.balance({from: alice});
+    assert.equal(aliceBalance, 1000, 'enroll balance is incorrect, check balance method or constructor');
+
+    const bobBalance = await bank.balance({from: bob});
+    assert.equal(bobBalance, 1000, 'enroll balance is incorrect, check balance method or constructor');
+
+    const ownerBalance = await bank.balance({from: owner});
+    assert.equal(ownerBalance, 0, 'only enrolled users should have balance, check balance method or constructor')
   });
 
-  it("should deposit correct amount", function() {
-    let bank = undefined;
+  it("should deposit correct amount", async () => {
+    const bank = await SimpleBank.deployed();
     const deposit = web3.toBigNumber(2);
+
+    await bank.enroll({from: alice});
+    await bank.enroll({from: bob});
+
+    await bank.deposit(deposit, {from: alice});
+    const balance = await bank.balance({from: alice});
+    assert.equal(deposit.plus(1000).toString(), balance, 'deposit amount incorrect, check deposit method');
+
     const expectedEventResult = {accountAddress: alice.address, amount: deposit};
-    const expectedBalance = web3.toBigNumber(deposit).plus(web3.toBigNumber(1)).toString();
-    return SimpleBank
-    .new()
-    .then(function(instance) {
-      bank = instance;
-      return bank.enroll(alice);
-    })
-    .then(function() {
-      return bank.deposit(alice, deposit);
-    })
-    .then(function(txReceipt) {
-      var events = bank.allEvents();
-      return new Promise(function(resolve, reject) {
-        events.watch(function(error, log){ resolve(log);});
-      });
-    })
-    .then(function(log) {
-        const logAccountAddress = log.args.accountAddress;
-        const logAmount = log.args.amount;
-        assert.equal(expectedEventResult.accountAddress, expectedEventResult.accountAddress, "LogDepositMade event accountAddress property not emmitted, check deposit method");
-        assert.equal(expectedEventResult.amount, expectedEventResult.amount, "LogDepositMade event amount property not emmitted, check deposit method");
-    })
-    .then(function() {
-      return bank.balance(alice);
-    })
-    .then(function(balance) {
-      assert.equal(web3.toBigNumber(balance).toString(), web3.toBigNumber(expectedBalance).toString(), 'balance incorrect after deposit, check deposit method');
+
+    const LogDepositMade = await bank.allEvents();
+    const log = await new Promise(function(resolve, reject) {
+        LogDepositMade.watch(function(error, log){ resolve(log);});
     });
+
+    const logAccountAddress = log.args.accountAddress;
+    const logAmount = log.args.amount;
+    assert.equal(expectedEventResult.accountAddress, expectedEventResult.accountAddress, "LogDepositMade event accountAddress property not emmitted, check deposit method");
+    assert.equal(expectedEventResult.amount, expectedEventResult.amount, "LogDepositMade event amount property not emmitted, check deposit method");
+  });
+
+  it("should withdraw correct amount", async () => {
+    const bank = await SimpleBank.deployed();
+    const deposit = web3.toBigNumber(2);
+
+    await bank.enroll({from: alice});
+    await bank.enroll({from: bob});
+
+    await bank.deposit(deposit, {from: alice});
+    await bank.withdraw(deposit, {from: alice});
+
+    const balance = await bank.balance({from: alice});
+
+    assert.equal(deposit.plus(1000).toString(), balance, 'withdraw amount incorrect, check withdraw method');
+
+    await bank.withdraw(deposit, {from: alice});
+
+    assert.equal(deposit.plus(1000).toString(), balance, 'withdraw should fail and throw on insufficient balance, check withdraw method');
   });
 
 
