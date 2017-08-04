@@ -14,8 +14,11 @@ import {routerReducer} from 'react-router-redux';
 import {reducer as formReducer} from 'redux-form';
 
 import newItemReducer from './components/NewItem/newItem.reducer';
+import itemReducer from './components/Item/item.reducer';
+import homeReducer from './components/Home/home.reducer';
 
 import watchNewItemSubmit from './components/NewItem/newItem.saga';
+import watchInjectWeb3 from './components/Home/home.saga';
 
 import App from "./App";
 
@@ -23,13 +26,16 @@ const rootReducer = combineReducers({
   form: formReducer,
   routing: routerReducer,
   // YOUR REDUCERS HERE
-  newItem: newItemReducer
+  newItem: newItemReducer,
+  item: itemReducer,
+  home: homeReducer
 });
 
 const rootSaga = function* startForeman() {
   yield [
     // YOUR SAGAS HERE
-    fork(watchNewItemSubmit)
+    fork(watchNewItemSubmit),
+    fork(watchInjectWeb3)
   ]
 };
 
