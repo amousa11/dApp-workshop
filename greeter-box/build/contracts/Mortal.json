@@ -1,0 +1,41 @@
+{
+  "contract_name": "Mortal",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "kill",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "payable": false,
+      "type": "constructor"
+    }
+  ],
+  "unlinked_binary": "0x60606040523415600e57600080fd5b5b60008054600160a060020a03191633600160a060020a03161790555b5b60888061003a6000396000f300606060405263ffffffff60e060020a60003504166341c0e1b581146023575b600080fd5b3415602d57600080fd5b60336035565b005b60005433600160a060020a0390811691161415605957600054600160a060020a0316ff5b5b5600a165627a7a72305820b3dc46aec219e2314ef537b091bccf48e97f1d161ad55c80554c43bb746210910029",
+  "networks": {
+    "1501113015028": {
+      "events": {},
+      "links": {},
+      "address": "0x76598005cf0375eb5c8ed014ada26d2f2825cf4f",
+      "updated_at": 1501113107280
+    },
+    "1501116661702": {
+      "events": {},
+      "links": {},
+      "address": "0xfa307482cfe5c7be4a0de2e9c6fec73aaebb5361",
+      "updated_at": 1501117300494
+    },
+    "1501117456898": {
+      "events": {},
+      "links": {},
+      "address": "0x9e24335fceb3f93908937acc2b92b0bbea3b289d",
+      "updated_at": 1501117477066
+    }
+  },
+  "schema_version": "0.0.5",
+  "updated_at": 1501117477066
+}
