@@ -56,32 +56,17 @@ contract Amazon {
     to Sold. Be careful, this function should use 3 modifiers to check if the item is for sale, 
     if the buyer paid enough, and check the value after the function is called to make sure the buyer is
     refunded any excess ether sent. Remember to call the event associated with this function!*/
-  function buyItem(uint sku) payable
-  forSale(sku)
-  paidEnough(items[sku].price)
-  checkValue(items[sku].price){
-    Sold(sku);
-    items[sku].seller.transfer(msg.value);
-    items[sku].buyer = msg.sender;
-    items[sku].state = State.Sold;
+  function buyItem(uint sku) KEYWORD{
   }
 
   /* Add 2 modifiers to check if the item is sold already, and that the person calling this function 
   is the seller. Change the state of the item to shipped. Remember to call the event associated with this function!*/
-  function shipItem(uint sku)
-  isOwner(items[sku].seller)
-  sold(sku) {
-    Shipped(sku);
-    items[sku].state = State.Shipped;
+  function shipItem(uint sku) {
   }
 
   /* Add 2 modifiers to check if the item is shipped already, and that the person calling this function 
   is the buyer. Change the state of the item to received. Remember to call the event associated with this function!*/
-  function receiveItem(uint sku)
-  isOwner(items[sku].buyer)
-  shipped(sku) {
-    Received(sku);
-    items[sku].state = State.Received;
+  function receiveItem(uint sku){
   }
 
   /* We have this function completed so we can run tests, just ignore it :) */
