@@ -1,33 +1,32 @@
 pragma solidity ^0.4.13;
 contract SimpleBank {
 
-    mapping (address => uint) private balances;
+    /* Fill in the keyword. Hint: We want to protect our users balance from modification*/
+    mapping (address => uint) KEYWORD balances;
 
-    address public owner;
+    /* Let's make sure everyone knows who owns the bank. Use the appropriate keyword for this*/
+    address KEYWORD owner;
 
     // Events - publicize actions to external listeners
-    event LogDepositMade(address accountAddress, uint amount);
+    /* Add 2 arguments for this event, an accountAddress and an amount */
+    event LogDepositMade();
 
     // Constructor, can receive one or many variables here; only one allowed
     function SimpleBank() {
-        owner = msg.sender;
+        /* Set the owner to the createor of this contract */
     }
 
     /// @notice Enroll a customer with the bank, giving them 1000 tokens for free
     /// @return The balance of the user after enrolling
-    function enroll() public returns (uint){ //Notice how this might be a vulnerability... let's discuss this later
-      balances[msg.sender] = 1000;
-      return balances[msg.sender];
+    function enroll() KEYWORD returns (uint){ //Notice how this might be a vulnerability... let's discuss this later
+      /* Set the sender's balance to 1000, return the sender's balance */
     }
 
     /// @notice Deposit ether into bank
     /// @return The balance of the user after the deposit is made
     function deposit(uint amount) public returns (uint) {
-        balances[msg.sender] += amount;
-
-        LogDepositMade(msg.sender, amount); // fire event
-
-        return balances[msg.sender];
+        /* Add the amount to the user's balance, call the event associated with a deposit,
+          then return the balance of the user */
     }
 
     /// @notice Withdraw ether from bank
@@ -35,24 +34,18 @@ contract SimpleBank {
     /// @param withdrawAmount amount you want to withdraw
     /// @return The balance remaining for the user
     function withdraw(uint withdrawAmount) public returns (uint remainingBal) {
-        if(balances[msg.sender] >= withdrawAmount) {
-
-            balances[msg.sender] -= withdrawAmount;
-
-            if (!msg.sender.send(withdrawAmount)) {
-                balances[msg.sender] += withdrawAmount;
-            }
-        }
-
-        return balances[msg.sender];
+        /* If the sender's balance is at least the amount they want to withdraw,
+           Subtract the amount from the sender's balance, and try to send that amount of ether
+           to the user attempting to withdraw. IF the send fails, add the amount back to the user's balance
+           return the user's balance.*/
     }
 
     /// @notice Get balance
     /// @return The balance of the user
-    // 'constant' prevents function from editing state variables;
+    // A SPECIAL KEYWORD prevents function from editing state variables;
     // allows function to run locally/off blockchain
-    function balance() constant returns (uint) {
-        return balances[msg.sender];
+    function balance() THE_KEYWORD returns (uint) {
+        /* Get the balance of the sender of this transaction */
     }
 
     // Fallback function - Called if other functions don't match call or
