@@ -1,9 +1,9 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.13;
 
 contract Amazon {
   address private STORE;
-  uint skuCount;
-  mapping (uint => Item) items;
+  uint public skuCount;
+  mapping (uint => Item) public items;
 
   enum State { ForSale, Sold, Shipped, Received }
 
@@ -12,7 +12,8 @@ contract Amazon {
     uint sku;
     uint price;
     State state;
-    address owner;
+    address seller;
+    address buyer;
   }
 
   event ForSale(uint sku);
@@ -20,24 +21,14 @@ contract Amazon {
   event Shipped(uint sku);
   event Received(uint sku);
 
-  modifier isOwner (address owner) { if (msg.sender == owner) _;  else throw;}
-  modifier ifDoesNotExist (string name, uint sku, uint price) { if (items[sku].sku != sku) _; }
-  modifier paidEnough(uint value) {
-    if (value <= msg.value) {
-      _;
-    }
-    else {
-      throw;
-    }
-  }
+  modifier isOwner (address owner) { require(msg.sender == owner); _;}
+  modifier paidEnough(uint value) { require(value <= msg.value); _; }
 
   modifier checkValue(uint amount) {
     _;
     if (msg.value > amount) {
       uint amountToRefund = amount - msg.value;
-      if (!msg.sender.send(amountToRefund)) {
-        throw;
-      }
+      msg.sender.transfer(amountToRefund);
     }
   }
 
@@ -49,48 +40,51 @@ contract Amazon {
 
   function Amazon() {
     setOwner(msg.sender);
-    skuCount = 1;
+    skuCount = 0;
   }
 
   function setOwner(address owner) internal {
     STORE = owner;
   }
 
-  function addItem(string _name, uint _price) ifDoesNotExist(_name, skuCount, _price) {
+  function addItem(string _name, uint _price) {
     ForSale(skuCount);
-    items[skuCount] = Item({name: _name, sku: skuCount++, price: _price, state: State.ForSale, owner: STORE});
+    skuCount = skuCount + 1;
+    items[skuCount] = Item({name: _name, sku: skuCount, price: _price, state: State.ForSale, seller: msg.sender, buyer: msg.sender});
   }
 
-  function buyItem(uint sku)
+  function buyItem(uint sku) payable
   forSale(sku)
   paidEnough(items[sku].price)
   checkValue(items[sku].price){
     Sold(sku);
-    items[sku].owner = msg.sender;
+    items[sku].seller.transfer(msg.value);
+    items[sku].buyer = msg.sender;
     items[sku].state = State.Sold;
   }
 
   function shipItem(uint sku)
-  isOwner(STORE)
+  isOwner(items[sku].seller)
   sold(sku) {
     Shipped(sku);
     items[sku].state = State.Shipped;
   }
 
   function receiveItem(uint sku)
-  isOwner(items[sku].owner)
+  isOwner(items[sku].buyer)
   shipped(sku) {
     Received(sku);
     items[sku].state = State.Received;
   }
 
-  function queryItem(uint _sku) returns (string, uint, uint, uint, address) {
-    string name = items[_sku].name;
-    uint sku = items[_sku].sku;
-    uint price = items[_sku].price;
-    uint state = uint(items[_sku].state);
-    address owner = items[_sku].owner;
-    return (name, sku, price, state, owner);
+  function fetchLast() returns (string name, uint sku, uint price, uint state, address seller, address buyer) {
+    name = items[skuCount].name;
+    sku = items[skuCount].sku;
+    price = items[skuCount].price;
+    state = uint(items[skuCount].state);
+    seller = items[skuCount].seller;
+    buyer = items[skuCount].buyer;
+    return (name, sku, price, state, seller, buyer);
   }
 
 }
