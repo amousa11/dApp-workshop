@@ -1,23 +1,23 @@
-export const INJECT_WEB3 = "INJECT_WEB3";
-export const INJECT_WEB3_SUCCESS = "INJECT_WEB3_SUCCESS";
-export const INJECT_WEB3_FAILURE = "INJECT_WEB3_FAILURE";
+export const INST_CONTRACT = "INST_CONTRACT";
+export const INST_CONTRACT_SUCCESS = "INST_CONTRACT_SUCCESS";
+export const INST_CONTRACT_FAILURE = "INST_CONTRACT_FAILURE";
 
-export const injectWeb3 = function () {
+export const instantiateContract = function () {
     return {
-        type: INJECT_WEB3
+        type: INST_CONTRACT
     }
 }
 
-export const injectWeb3Success = function (web3) {
+export const instantiateContractSuccess = function (contract) {
     return {
-        type: INJECT_WEB3_SUCCESS,
-        web3: web3
+        type: INST_CONTRACT_SUCCESS,
+        contract: contract
     }
 }
 
-export const injectWeb3Failure = function (err) {
+export const instantiateContractFailure = function (error) {
     return {
-        type: INJECT_WEB3_FAILURE,
-        error: err
+        type: INST_CONTRACT_FAILURE,
+        error: error
     }
 }

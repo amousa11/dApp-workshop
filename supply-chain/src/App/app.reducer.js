@@ -1,7 +1,7 @@
 import {
-    INST_CONTRACT_SUCCESS,
-    INST_CONTRACT_FAILURE
-} from './home.actions';
+    INJECT_WEB3_SUCCESS,
+    INJECT_WEB3_FAILURE
+} from './app.actions';
 
 const initialState = {
     web3: undefined,
@@ -10,13 +10,13 @@ const initialState = {
 
 const reducer = function (state = initialState, action) {
     switch (action.type) {
-        case INST_CONTRACT_SUCCESS:
+        case INJECT_WEB3_SUCCESS:
             return {
-                contract: action.contract,
+                web3: action.web3,
             };
-        case INST_CONTRACT_FAILURE:
+        case INJECT_WEB3_FAILURE:
             return {
-                error: action.error,
+                error: action.error
             };
         default:
             return state;

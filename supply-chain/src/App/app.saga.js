@@ -1,13 +1,11 @@
 import { takeLatest, put, call } from 'redux-saga/effects';
 import {
-    INST_CONTRACT,
-    instantiateContractSuccess,
-    instantiateContractFailure
-} from './home.actions';
-import AmazonContract from '../../../build/contracts/Amazon.json';
+    INJECT_WEB3,
+    injectWeb3Success,
+    injectWeb3Failure
+} from './app.actions';
 import Web3 from 'web3'
 
-let amazon = undefined;
 let getWeb3 = new Promise(function (resolve, reject) {
     // Wait for loading completion to avoid race conditions with web3 injection timing.
     window.addEventListener('load', function () {
@@ -41,23 +39,19 @@ let getWeb3 = new Promise(function (resolve, reject) {
             resolve(results)
         }
     })
-});
+})
 
-function* instantiateContract(action) {
+function* injectWeb3(action) {
     try {
-        const web3 = yield getWeb3;
-        web3.then(function (web3) {
-            const contract = require('truffle-contract');
-            amazon = contract(AmazonContract);
-            amazon.setProvider(web3.currentProvider);
-        });
-        yield put(instantiateContractSuccess(amazon));
+        const response = yield getWeb3;
+        console.log(response);
+        yield put(injectWeb3Success(response));
     }
     catch (err) {
-        yield put(instantiateContractFailure(err));
+        yield put(injectWeb3Failure(err));
     }
 }
 
-export default function* watchinstantiateContract() {
-    yield takeLatest(INST_CONTRACT, instantiateContract);
+export function* watchInjectWeb3() {
+    yield takeLatest(INJECT_WEB3, injectWeb3);
 }
