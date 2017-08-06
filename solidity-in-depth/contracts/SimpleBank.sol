@@ -1,15 +1,22 @@
 pragma solidity ^0.4.13;
+
+
 contract SimpleBank {
 
-    /* Fill in the keyword. Hint: We want to protect our users balance from modification*/
-    mapping (address => uint) KEYWORD balances;
+    /* Take a look @ the public keyword. 
+    Why: We want to protect our users balance from modification*/
+    mapping (address => uint) private balances;
 
-    /* Let's make sure everyone knows who owns the bank. Use the appropriate keyword for this*/
-    address KEYWORD owner;
+    /* Let's make sure everyone knows who owns the bank. public is the appropriate keyword for this*/
+    address public owner;
 
     // Events - publicize actions to external listeners
     /* Add 2 arguments for this event, an accountAddress and an amount */
     event LogDepositMade();
+
+    // Modifier... 
+    /* Create a modifier to check if a user is the owner. change 0x0 to the correct value*/
+    modifier isOwner {if (owner != 0x0) {_;}}
 
     // Constructor, can receive one or many variables here; only one allowed
     function SimpleBank() {
@@ -18,19 +25,20 @@ contract SimpleBank {
 
     /// @notice Enroll a customer with the bank, giving them 1000 tokens for free
     /// @return The balance of the user after enrolling
-    function enroll() KEYWORD returns (uint){ //Notice how this might be a vulnerability... let's discuss this later
-      /* Set the sender's balance to 1000, return the sender's balance */
+    /* Add our modifier to make sure only the owner can enroll new users */
+    function enroll(address user) public returns (uint) { 
+      /* Set the user's balance to 1000, return the user's balance */
     }
 
-    /// @notice Deposit ether into bank
+    /// @notice Deposit token into bank
     /// @return The balance of the user after the deposit is made
     function deposit(uint amount) public returns (uint) {
-        /* Add the amount to the user's balance, call the event associated with a deposit,
-          then return the balance of the user */
+        /* Add the amount to the sender's balance, call the event associated with a deposit,
+          then return the balance of the sender */
     }
 
-    /// @notice Withdraw ether from bank
-    /// @dev This does not return any excess ether sent to it
+    /// @notice Withdraw token from bank
+    /// @dev This does not return any excess balance sent to it
     /// @param withdrawAmount amount you want to withdraw
     /// @return The balance remaining for the user
     function withdraw(uint withdrawAmount) public returns (uint remainingBal) {
@@ -42,9 +50,9 @@ contract SimpleBank {
 
     /// @notice Get balance
     /// @return The balance of the user
-    // A SPECIAL KEYWORD prevents function from editing state variables;
+    // ADD THE SPECIAL KEYWORD which prevents function from modifying state variables;
     // allows function to run locally/off blockchain
-    function balance() THE_KEYWORD returns (uint) {
+    function balance() returns (uint) {
         /* Get the balance of the sender of this transaction */
     }
 

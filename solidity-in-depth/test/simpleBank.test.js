@@ -55,14 +55,17 @@ contract('SimpleBank', function(accounts) {
 
     await bank.deposit(deposit, {from: alice});
     await bank.withdraw(deposit, {from: alice});
-
-    const balance = await bank.balance({from: alice});
-
-    assert.equal(deposit.plus(1000).toString(), balance, 'withdraw amount incorrect, check withdraw method');
-
-    await bank.withdraw(deposit, {from: alice});
-
-    assert.equal(deposit.plus(1000).toString(), balance, 'withdraw should fail and throw on insufficient balance, check withdraw method');
+    let balance = await bank.balance({from: alice});
+    
+    assert.isOk(web3.toBigNumber(1000).equals(balance), 'withdraw amount incorrect, check withdraw method for deposit + withdrawal');
+    
+    await bank.withdraw(deposit.times(1000000000), { from: alice });
+    balance = await bank.balance({ from: alice });
+    assert.isOk(web3.toBigNumber(1000).equals(balance), 'withdraw amount incorrect, check withdraw method for insufficient balance');
+    
+    await bank.withdraw(deposit.times(10), { from: alice });
+    balance = await bank.balance({ from: alice });
+    assert.isOk(web3.toBigNumber(1000).minus(deposit.times(10)).equals(balance), 'withdraw amount incorrect, check withdraw method for withdrawal');
   });
 
 
