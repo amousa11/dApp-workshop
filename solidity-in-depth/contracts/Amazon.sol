@@ -45,7 +45,7 @@ contract Amazon {
     }
 
     function addItem(string _name, uint _price) {
-        ForSale(skuCount);
+        forSale(skuCount);
         skuCount = skuCount + 1;
         items[skuCount] = Item({
             name: _name, 
