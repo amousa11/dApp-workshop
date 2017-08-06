@@ -41,11 +41,11 @@ contract SimpleBank {
     /// @dev This does not return any excess balance sent to it
     /// @param withdrawAmount amount you want to withdraw
     /// @return The balance remaining for the user
-    function withdraw(uint withdrawAmount) public returns (uint remainingBal) {
+    function withdraw(uint withdrawAmount) public returns (uint) {
         /* If the sender's balance is at least the amount they want to withdraw,
-           Subtract the amount from the sender's balance, and try to send that amount of ether
-           to the user attempting to withdraw. IF the send fails, add the amount back to the user's balance
-           return the user's balance.*/
+           Subtract the amount from the sender's balance, and try to send that amount of token
+           to the sender attempting to withdraw. IF the send fails, add the amount back to the sender's balance
+           return the sender's balance.*/
     }
 
     /// @notice Get balance

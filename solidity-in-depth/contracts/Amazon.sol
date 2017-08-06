@@ -10,10 +10,10 @@ contract Amazon {
     */
 
     /* Add a line that creates an enum called State. This should have 4 states
-        ForSale
-        Sold
-        Shipped
-        Received
+        forSale
+        sold
+        shipped
+        received
     */
 
     /* Create a struct named Item. 
