@@ -18,6 +18,7 @@ contract('Amazon', function (accounts) {
     assert.isOk(item[1].equals(expectedItem.sku), 'item sku incorrect, check addItem/queryItem');
     assert.isOk(item[2].equals(expectedItem.price), 'item price incorrect, check addItem/queryItem');
     assert.isOk(item[3].equals(expectedItem.state), 'item state incorrect, check addItem/queryItem');
+    return;
   });
 
   it("should sell one item", async () => {
@@ -33,6 +34,7 @@ contract('Amazon', function (accounts) {
     assert.isOk(item[1].equals(expectedItem.sku), 'item sku incorrect, check buyItem/queryItem');
     assert.isOk(item[2].equals(expectedItem.price), 'item price incorrect, check buyItem/queryItem');
     assert.isOk(item[3].equals(expectedItem.state), 'item state incorrect, check buyItem/queryItem');
+    return;
   });
 
   it("should ship one item", async () => {
@@ -48,6 +50,7 @@ contract('Amazon', function (accounts) {
     assert.isOk(item[1].equals(expectedItem.sku), 'item sku incorrect, check shipItem/queryItem');
     assert.isOk(item[2].equals(expectedItem.price), 'item price incorrect, check shipItem/queryItem');
     assert.isOk(item[3].equals(expectedItem.state), 'item state incorrect, check shipItem/queryItem');
+    return;
   });
 
   it("should receive one item", async () => {
@@ -62,5 +65,6 @@ contract('Amazon', function (accounts) {
     assert.isOk(item[1].equals(expectedItem.sku), 'item sku incorrect, check receiveItem/queryItem');
     assert.isOk(item[2].equals(expectedItem.price), 'item price incorrect, check receiveItem/queryItem');
     assert.isOk(item[3].equals(expectedItem.state), 'item state incorrect, check receiveItem/queryItem');
+    return;
   });
 });
