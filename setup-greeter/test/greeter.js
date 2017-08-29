@@ -6,6 +6,7 @@ contract('Greeter', function(accounts) {
     return Greeter.deployed()
       .then(function(instance) {
         /* CALL the greet function */
+        instance.greeter("test greeting");
         return instance.greet.call();
       })
       .then(function(result) {
