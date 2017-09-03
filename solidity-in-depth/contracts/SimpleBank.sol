@@ -20,7 +20,7 @@ contract SimpleBank {
 
     // Constructor, can receive one or many variables here; only one allowed
     function SimpleBank() {
-        /* Set the owner to the createor of this contract */
+        /* Set the owner to the creator of this contract */
     }
 
     /// @notice Enroll a customer with the bank, giving them 1000 tokens for free
