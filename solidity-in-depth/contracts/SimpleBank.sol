@@ -1,4 +1,6 @@
 pragma solidity ^0.4.13;
+
+
 contract SimpleBank {
 
     mapping (address => uint) private balances;
@@ -15,9 +17,9 @@ contract SimpleBank {
 
     /// @notice Enroll a customer with the bank, giving them 1000 tokens for free
     /// @return The balance of the user after enrolling
-    function enroll() public returns (uint){ //Notice how this might be a vulnerability... let's discuss this later
-      balances[msg.sender] = 1000;
-      return balances[msg.sender];
+    function enroll() public returns (uint) { 
+        balances[msg.sender] = 1000;
+        return balances[msg.sender];
     }
 
     /// @notice Deposit ether into bank
@@ -35,7 +37,7 @@ contract SimpleBank {
     /// @param withdrawAmount amount you want to withdraw
     /// @return The balance remaining for the user
     function withdraw(uint withdrawAmount) public returns (uint remainingBal) {
-        if(balances[msg.sender] >= withdrawAmount) {
+        if (balances[msg.sender] >= withdrawAmount) {
 
             balances[msg.sender] -= withdrawAmount;
 

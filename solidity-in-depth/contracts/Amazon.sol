@@ -34,23 +34,23 @@ contract Amazon {
     }
 
     modifier forSale (uint sku) {
-        if (items[sku].state == State.ForSale) 
-          _;
+        require (items[sku].state == State.ForSale);
+        _;
     }
 
     modifier sold (uint sku) {
-        if (items[sku].state == State.Sold) 
-          _;
+        require (items[sku].state == State.Sold);
+        _;
     }
 
     modifier shipped (uint sku) {
-        if (items[sku].state == State.Shipped) 
-          _;
+        require (items[sku].state == State.Shipped);
+        _;
     }
 
     modifier received (uint sku) {
-        if (items[sku].state == State.Received) 
-          _;
+        require (items[sku].state == State.Received);
+        _;
     }
 
 
