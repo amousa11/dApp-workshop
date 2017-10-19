@@ -1,8 +1,7 @@
-pragma solidity ^0.4.13;
+pragma solidity ^0.4.16;
 
 
 contract Amazon {
-    address private STORE;
     uint public skuCount;
     mapping (uint => Item) public items;
 
@@ -17,10 +16,10 @@ contract Amazon {
         address buyer;
     }
 
-    event ForSale(uint sku);
-    event Sold(uint sku);
-    event Shipped(uint sku);
-    event Received(uint sku);
+    event LogForSale(uint sku);
+    event LogSold(uint sku);
+    event LogShipped(uint sku);
+    event LogReceived(uint sku);
 
     modifier isOwner (address owner) {require(msg.sender == owner); _;}
     modifier paidEnough(uint value) {require(value <= msg.value); _;}
@@ -54,17 +53,12 @@ contract Amazon {
     }
 
 
-    function Amazon() {
-        setOwner(msg.sender);
+    function Amazon() public {
         skuCount = 0;
     }
 
-    function setOwner(address owner) internal {
-        STORE = owner;
-    }
-
-    function addItem(string _name, uint _price) {
-        ForSale(skuCount);
+    function addItem(string _name, uint _price) public {
+        LogForSale(skuCount);
         skuCount = skuCount + 1;
         items[skuCount] = Item(
             _name, 
@@ -75,34 +69,34 @@ contract Amazon {
             0x0);
     }
 
-    function buyItem(uint sku) payable
+    function buyItem(uint sku) public payable
     forSale(sku)
     paidEnough(items[sku].price)
     checkValue(items[sku].price)
     {
-        Sold(sku);
+        LogSold(sku);
         items[sku].seller.transfer(msg.value);
         items[sku].buyer = msg.sender;
         items[sku].state = State.Sold;
     }
 
-    function shipItem(uint sku)
+    function shipItem(uint sku) public
     isOwner(items[sku].seller)
     sold(sku) 
     {
-        Shipped(sku);
+        LogShipped(sku);
         items[sku].state = State.Shipped;
     }
 
-    function receiveItem(uint sku)
+    function receiveItem(uint sku) public
     isOwner(items[sku].buyer)
     shipped(sku) 
     {
-        Received(sku);
+        LogReceived(sku);
         items[sku].state = State.Received;
     }
 
-    function fetchLast() returns (string name, uint sku, uint price, uint state, address seller, address buyer) {
+    function fetchLast() public view returns (string name, uint sku, uint price, uint state, address seller, address buyer) {
         name = items[skuCount].name;
         sku = items[skuCount].sku;
         price = items[skuCount].price;
