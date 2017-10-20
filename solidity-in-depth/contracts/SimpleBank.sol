@@ -7,9 +7,6 @@ contract SimpleBank {
     Why: We want to protect our users balance from modification*/
     mapping (address => uint) private balances;
 
-    /* Let's make sure everyone knows who owns the bank. public is the appropriate keyword for this*/
-    address public owner;
-
     // Events - publicize actions to external listeners
     /* Add 2 arguments for this event, an accountAddress and an amount */
     event LogDepositMade();
@@ -20,7 +17,7 @@ contract SimpleBank {
 
     // Constructor, can receive one or many variables here; only one allowed
     function SimpleBank() {
-        /* Set the owner to the creator of this contract */
+        // Leave this blank
     }
 
     /// @notice Enroll a customer with the bank, giving them 1000 tokens for free
@@ -61,7 +58,7 @@ contract SimpleBank {
     // Typically, called when invalid data is sent
     // Added so ether sent to this contract is reverted if the contract fails
     // otherwise, the sender's money is transferred to contract
-    function () {
+    function () public {
         revert();
     }
 }

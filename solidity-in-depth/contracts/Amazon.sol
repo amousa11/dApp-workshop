@@ -1,4 +1,5 @@
-pragma solidity ^0.4.13;
+pragma solidity ^0.4.15;
+
 
 
 contract Amazon {
@@ -22,7 +23,7 @@ contract Amazon {
         if you need help you can ask around :)
     */
 
-    /* Create 4 events with the same name as each possible State (see above)
+    /* Create 4 events with the same name as each possible State. ex: LogForSale, LogSold (see above)
         Each event should accept one argument, the sku*/
 
 
@@ -41,12 +42,10 @@ contract Amazon {
 
 
     function Amazon() {
-        /* Here, set your skuCount to 0. */
+      // Leave this blank
     }
 
     function addItem(string _name, uint _price) {
-        forSale(skuCount);
-        skuCount = skuCount + 1;
         items[skuCount] = Item({
             name: _name, 
             sku: skuCount, 
@@ -55,6 +54,8 @@ contract Amazon {
             seller: msg.sender, 
             buyer: msg.sender
         });
+        skuCount = skuCount + 1;
+        LogForSale(skuCount);
     }
 
     /* Add a keyword so the function can be paid. This function should transfer money
@@ -74,16 +75,5 @@ contract Amazon {
     is the buyer. Change the state of the item to received. Remember to call the event associated with this function!*/
     function receiveItem(uint sku) {
     }
-
-    /* We have this function completed so we can run tests, just ignore it :) */
-    function fetchLast() returns (string name, uint sku, uint price, uint state, address seller, address buyer) {
-        name = items[skuCount].name;
-        sku = items[skuCount].sku;
-        price = items[skuCount].price;
-        state = uint(items[skuCount].state);
-        seller = items[skuCount].seller;
-        buyer = items[skuCount].buyer;
-        return (name, sku, price, state, seller, buyer);
-    }
-
+    
 }
