@@ -3,52 +3,54 @@ pragma solidity ^0.4.13;
 
 contract SimpleBank {
 
+    /* Take a look @ the public keyword. 
+    Why: We want to protect our users balance from modification*/
     mapping (address => uint) private balances;
 
-    address public owner;
-
     // Events - publicize actions to external listeners
-    event LogDepositMade(address accountAddress, uint amount);
+    /* Add 2 arguments for this event, an accountAddress and an amount */
+    event LogDepositMade();
+
+    // Modifier... 
+    /* Create a modifier to check if a user is the owner. change 0x0 to the correct value*/
+    modifier isOwner {if (owner != 0x0) {_;}}
 
     // Constructor, can receive one or many variables here; only one allowed
-    function SimpleBank() public {
-        owner = msg.sender;
+    function SimpleBank() {
+        // Leave this blank
     }
 
     /// @notice Enroll a customer with the bank, giving them 1000 tokens for free
     /// @return The balance of the user after enrolling
-    function enroll() public returns (uint) { 
-        balances[msg.sender] = 1000;
-        return balances[msg.sender];
+    /* Add our modifier to make sure only the owner can enroll new users */
+    function enroll(address user) public returns (uint) { 
+      /* Set the user's balance to 1000, return the user's balance */
     }
 
     /// @notice Deposit token into bank
     /// @return The balance of the user after the deposit is made
     function deposit(uint amount) public returns (uint) {
-        balances[msg.sender] += amount;
-
-        LogDepositMade(msg.sender, amount); // fire event
-
-        return balances[msg.sender];
+        /* Add the amount to the sender's balance, call the event associated with a deposit,
+          then return the balance of the sender */
     }
 
     /// @notice Withdraw token from bank
     /// @dev This does not return any excess balance sent to it
     /// @param withdrawAmount amount you want to withdraw
     /// @return The balance remaining for the user
-    function withdraw(uint withdrawAmount) public returns (uint remainingBal) {
-        if (balances[msg.sender] >= withdrawAmount) {
-            balances[msg.sender] -= withdrawAmount;
-        }
-        return balances[msg.sender];
+    function withdraw(uint withdrawAmount) public returns (uint) {
+        /* If the sender's balance is at least the amount they want to withdraw,
+           Subtract the amount from the sender's balance, and try to send that amount of token
+           to the sender attempting to withdraw. IF the send fails, add the amount back to the sender's balance
+           return the sender's balance.*/
     }
 
     /// @notice Get balance
     /// @return The balance of the user
-    // 'constant' prevents function from editing state variables;
+    // ADD THE SPECIAL KEYWORD which prevents function from modifying state variables;
     // allows function to run locally/off blockchain
-    function balance() public constant returns (uint) {
-        return balances[msg.sender];
+    function balance() returns (uint) {
+        /* Get the balance of the sender of this transaction */
     }
 
     // Fallback function - Called if other functions don't match call or
