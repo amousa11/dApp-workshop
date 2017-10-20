@@ -17,6 +17,8 @@ contract('Amazon', function (accounts) {
     assert.equal(item[1].toString(), expectedItem.sku, 'item sku incorrect, check addItem');
     assert.equal(item[2].toString(), expectedItem.price, 'item price incorrect, check addItem');
     assert.equal(item[3].toString(), expectedItem.state, 'item state incorrect, check addItem');
+    assert.equal(item[4], expectedItem.seller, 'item seller incorrect, check addItem');
+    assert.equal(item[5], 0, 'item buyer incorrect, check buyItem');
   });
 
   it("should sell one item", async () => {

@@ -1,6 +1,7 @@
 pragma solidity ^0.4.15;
 
 
+
 contract Amazon {
     uint public skuCount;
     mapping (uint => Item) public items;
