@@ -41,11 +41,11 @@ contract Amazon {
     modifier received (uint sku) {if (true) {_;}}
 
 
-    function Amazon() {
+    function Amazon() public {
       // Leave this blank
     }
 
-    function addItem(string _name, uint _price) {
+    function addItem(string _name, uint _price) public {
         items[skuCount] = Item({
             name: _name, 
             sku: skuCount, 
@@ -63,17 +63,18 @@ contract Amazon {
         to Sold. Be careful, this function should use 3 modifiers to check if the item is for sale, 
         if the buyer paid enough, and check the value after the function is called to make sure the buyer is
         refunded any excess ether sent. Remember to call the event associated with this function!*/
-    function buyItem(uint sku) {
+    function buyItem(uint sku) public {
     }
 
     /* Add 2 modifiers to check if the item is sold already, and that the person calling this function 
     is the seller. Change the state of the item to shipped. Remember to call the event associated with this function!*/
-    function shipItem(uint sku) {
+    function shipItem(uint sku) public {
     }
 
     /* Add 2 modifiers to check if the item is shipped already, and that the person calling this function 
     is the buyer. Change the state of the item to received. Remember to call the event associated with this function!*/
-    function receiveItem(uint sku) {
+    function receiveItem(uint sku) public {
     }
     
+    /* Create a fallback function. It's to you what it does! */
 }

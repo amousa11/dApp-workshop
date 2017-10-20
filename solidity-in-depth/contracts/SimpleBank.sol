@@ -11,10 +11,6 @@ contract SimpleBank {
     /* Add 2 arguments for this event, an accountAddress and an amount */
     event LogDepositMade();
 
-    // Modifier... 
-    /* Create a modifier to check if a user is the owner. change 0x0 to the correct value*/
-    modifier isOwner {if (owner != 0x0) {_;}}
-
     // Constructor, can receive one or many variables here; only one allowed
     function SimpleBank() {
         // Leave this blank
@@ -49,7 +45,7 @@ contract SimpleBank {
     /// @return The balance of the user
     // ADD THE SPECIAL KEYWORD which prevents function from modifying state variables;
     // allows function to run locally/off blockchain
-    function balance() returns (uint) {
+    function balance() public returns (uint) {
         /* Get the balance of the sender of this transaction */
     }
 
