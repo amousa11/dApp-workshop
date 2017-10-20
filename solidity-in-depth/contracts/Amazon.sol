@@ -1,4 +1,4 @@
-pragma solidity ^0.4.16;
+pragma solidity ^0.4.15;
 
 
 contract Amazon {
@@ -54,19 +54,18 @@ contract Amazon {
 
 
     function Amazon() public {
-        skuCount = 0;
     }
 
     function addItem(string _name, uint _price) public {
-        LogForSale(skuCount);
-        skuCount = skuCount + 1;
         items[skuCount] = Item(
             _name, 
             skuCount, 
             _price, 
             State.ForSale,
             msg.sender,
-            0x0);
+            0x0);        
+        LogForSale(skuCount);
+        skuCount = skuCount + 1;
     }
 
     function buyItem(uint sku) public payable
@@ -74,36 +73,25 @@ contract Amazon {
     paidEnough(items[sku].price)
     checkValue(items[sku].price)
     {
-        LogSold(sku);
         items[sku].seller.transfer(msg.value);
         items[sku].buyer = msg.sender;
         items[sku].state = State.Sold;
+        LogSold(sku);
     }
 
     function shipItem(uint sku) public
     isOwner(items[sku].seller)
     sold(sku) 
     {
-        LogShipped(sku);
         items[sku].state = State.Shipped;
+        LogShipped(sku);
     }
 
     function receiveItem(uint sku) public
     isOwner(items[sku].buyer)
     shipped(sku) 
     {
-        LogReceived(sku);
         items[sku].state = State.Received;
+        LogReceived(sku);
     }
-
-    function fetchLast() public view returns (string name, uint sku, uint price, uint state, address seller, address buyer) {
-        name = items[skuCount].name;
-        sku = items[skuCount].sku;
-        price = items[skuCount].price;
-        state = uint(items[skuCount].state);
-        seller = items[skuCount].seller;
-        buyer = items[skuCount].buyer;
-        return (name, sku, price, state, seller, buyer);
-    }
-
 }
