@@ -3,77 +3,96 @@ pragma solidity ^0.4.15;
 
 
 contract Amazon {
+    uint public skuCount;
+    mapping (uint => Item) public items;
 
-    /* Add a variable called skuCount to track the most recent sku # */
+    enum State { ForSale, Sold, Shipped, Received }
 
-    /* Add a line that creates a public mapping that maps the SKU (a number) to an Item.
-         Call this mappings items 
-    */
-
-    /* Add a line that creates an enum called State. This should have 4 states
-        forSale
-        sold
-        shipped
-        received
-    */
-
-    /* Create a struct named Item. 
-        Here, add a name, sku, price, state, seller, and buyer 
-        We've left you to figure out what the appropriate types are, 
-        if you need help you can ask around :)
-    */
-
-    /* Create 4 events with the same name as each possible State. ex: LogForSale, LogSold (see above)
-        Each event should accept one argument, the sku*/
-
-
-    modifier isOwner (address owner) {if (true) {_;}}
-    modifier paidEnough(uint value) {if (true) {_;}}
-
-    modifier checkValue(uint amount) {if (true) {_;}}
-
-    /* For each of the following modifiers, use what you learned about modifiers
-     to give them functionality. For example, the forSale modifier should require 
-     that the item with the given sku has the state ForSale. */
-    modifier forSale (uint sku) {if (true) {_;}}
-    modifier sold (uint sku) {if (true) {_;}}
-    modifier shipped (uint sku) {if (true) {_;}}
-    modifier received (uint sku) {if (true) {_;}}
-
-
-    function Amazon() {
-      // Leave this blank
+    struct Item {
+        string name;
+        uint sku;
+        uint price;
+        State state;
+        address seller;
+        address buyer;
     }
 
-    function addItem(string _name, uint _price) {
-        items[skuCount] = Item({
-            name: _name, 
-            sku: skuCount, 
-            price: _price, 
-            state: State.ForSale, 
-            seller: msg.sender, 
-            buyer: msg.sender
-        });
-        skuCount = skuCount + 1;
+    event LogForSale(uint sku);
+    event LogSold(uint sku);
+    event LogShipped(uint sku);
+    event LogReceived(uint sku);
+
+    modifier isOwner (address owner) {require(msg.sender == owner); _;}
+    modifier paidEnough(uint value) {require(value <= msg.value); _;}
+
+    modifier checkValue(uint amount) {
+      _;
+      if (msg.value > amount) {
+        uint amountToRefund = amount - msg.value;
+        msg.sender.transfer(amountToRefund);
+      }
+    }
+
+    modifier forSale (uint sku) {
+        require (items[sku].state == State.ForSale);
+        _;
+    }
+
+    modifier sold (uint sku) {
+        require (items[sku].state == State.Sold);
+        _;
+    }
+
+    modifier shipped (uint sku) {
+        require (items[sku].state == State.Shipped);
+        _;
+    }
+
+    modifier received (uint sku) {
+        require (items[sku].state == State.Received);
+        _;
+    }
+
+
+    function Amazon() public {
+    }
+
+    function addItem(string _name, uint _price) public {
+        items[skuCount] = Item(
+            _name, 
+            skuCount, 
+            _price, 
+            State.ForSale,
+            msg.sender,
+            0x0);        
         LogForSale(skuCount);
+        skuCount = skuCount + 1;
     }
 
-    /* Add a keyword so the function can be paid. This function should transfer money
-        to the seller, set the buyer as the person who called this transaction, and set the state
-        to Sold. Be careful, this function should use 3 modifiers to check if the item is for sale, 
-        if the buyer paid enough, and check the value after the function is called to make sure the buyer is
-        refunded any excess ether sent. Remember to call the event associated with this function!*/
-    function buyItem(uint sku) {
+    function buyItem(uint sku) public payable
+    forSale(sku)
+    paidEnough(items[sku].price)
+    checkValue(items[sku].price)
+    {
+        items[sku].seller.transfer(msg.value);
+        items[sku].buyer = msg.sender;
+        items[sku].state = State.Sold;
+        LogSold(sku);
     }
 
-    /* Add 2 modifiers to check if the item is sold already, and that the person calling this function 
-    is the seller. Change the state of the item to shipped. Remember to call the event associated with this function!*/
-    function shipItem(uint sku) {
+    function shipItem(uint sku) public
+    isOwner(items[sku].seller)
+    sold(sku) 
+    {
+        items[sku].state = State.Shipped;
+        LogShipped(sku);
     }
 
-    /* Add 2 modifiers to check if the item is shipped already, and that the person calling this function 
-    is the buyer. Change the state of the item to received. Remember to call the event associated with this function!*/
-    function receiveItem(uint sku) {
+    function receiveItem(uint sku) public
+    isOwner(items[sku].buyer)
+    shipped(sku) 
+    {
+        items[sku].state = State.Received;
+        LogReceived(sku);
     }
-    
 }
