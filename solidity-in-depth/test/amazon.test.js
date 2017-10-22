@@ -140,7 +140,7 @@ contract('Amazon', function (accounts) {
 
     for (var i = start; i < end; i++) {
       expectedItems[i] = { name: "Spoon" + i.toString(), sku: i, price: web3.toWei('10', 'ether'), seller: accounts[i % 10], buyer: accounts[(i + 1) % 10], state: 3 };
-      await amazon.receiveItem(i, { from: accounts[(i+1) % 10] });
+      await amazon.receiveItem(i, { from: accounts[(i + 1) % 10] });
     }
 
     for (var i = start; i < end; i++) {
